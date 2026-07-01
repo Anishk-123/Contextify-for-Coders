@@ -18,7 +18,7 @@ async function getAIExplanation(keyword, language) {
   const { apiKey } = await chrome.storage.sync.get("apiKey");
   if (!apiKey) return "❌ API key missing! Go to Options to set it.";
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
   const body = {
     contents: [
@@ -322,58 +322,8 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-// Load Highlight.js for syntax highlighting
-function loadHighlightJS() {
-  if (window.hljs) return;
-  
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css";
-  document.head.appendChild(link);
+// Highlight.js dynamic loading is removed.
+// If highlight.js is already present for any reason, we do not use it from here.
+// Code blocks will render without syntax highlighting.
 
-  const script = document.createElement("script");
-  script.src = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js";
-  script.onload = () => {
-    // Load common languages
-    const languages = ['javascript', 'python', 'java', 'cpp', 'html', 'css', 'sql', 'c'];
-    languages.forEach(lang => {
-      const langScript = document.createElement("script");
-      langScript.src = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/${lang}.min.js`;
-      document.head.appendChild(langScript);
-    });
-    
-    // Apply highlighting to existing code blocks
-    setTimeout(() => {
-      document.querySelectorAll('pre code').forEach((block) => {
-        hljs.highlightBlock(block);
-      });
-    }, 100);
-  };
-  document.head.appendChild(script);
-}
 
-// Load Highlight.js when script loads
-loadHighlightJS();
-
-// Apply syntax highlighting to dynamically added code blocks
-const observer = new MutationObserver((mutations) => {
-  mutations.forEach((mutation) => {
-    if (mutation.type === 'childList') {
-      mutation.addedNodes.forEach((node) => {
-        if (node.nodeType === 1) { // Element node
-          const codeBlocks = node.querySelectorAll ? node.querySelectorAll('pre code') : [];
-          codeBlocks.forEach((block) => {
-            if (window.hljs && !block.classList.contains('hljs')) {
-              hljs.highlightBlock(block);
-            }
-          });
-        }
-      });
-    }
-  });
-});
-
-observer.observe(document.body, {
-  childList: true,
-  subtree: true
-});

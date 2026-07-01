@@ -79,4 +79,4 @@
 ---
 
 ## 📜 License
-MIT License © 2025 [gchinmayhegde]
+MIT License © 2025 [Anish K]
